@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proy1/controller/AuthController.dart';
 import 'package:proy1/pages/pagina02.dart';
 import 'package:proy1/pages/register.dart';
 
@@ -6,9 +7,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -41,6 +47,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Widget cuerpo(BuildContext context) {
+  final controllerUsuario = TextEditingController();
+  final controllerContrasena = TextEditingController();
+  final authController = AuthController();
+
   return Container(
     color: Colors.black,
     child: Center(
@@ -48,10 +58,61 @@ Widget cuerpo(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         nombre(),
-        campoUsuario(),
-        campocontrasena(),
+        campoUsuario(controllerUsuario),
+        campocontrasena(controllerContrasena),
         SizedBox(height: 10),
-        botonEntrar(context),
+        // botonEntrar(context),
+        TextButton(
+          style: const ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(Colors.blueAccent),
+            padding: MaterialStatePropertyAll<EdgeInsets>(
+                EdgeInsets.symmetric(horizontal: 100, vertical: 10)),
+          ),
+          onPressed: () async {
+            final email = controllerUsuario.text;
+            final password = controllerContrasena.text;
+
+            final response = await authController.login(email, password);
+
+            print(response['status']);
+
+            if (response['status']) {
+              // Inicio de sesión exitoso, puedes hacer lo que necesites con la respuesta del servidor
+              print('Inicio de sesión exitoso');
+              print('Token: ${response['token']}');
+              // Realiza la navegación a la siguiente pantalla aquí.
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Pagina02(),
+                ),
+              );
+            } else {
+              // Inicio de sesión fallido, muestra un mensaje de error al usuario
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Error de inicio de sesión'),
+                    content: Text(response['error']),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context); // Cierra el cuadro de diálogo
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+          child: const Text(
+            "Entrar",
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+        ),
         SizedBox(
           height: 10,
         ),
@@ -69,10 +130,11 @@ Widget nombre() {
   );
 }
 
-Widget campoUsuario() {
+Widget campoUsuario(TextEditingController controller) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
     child: TextField(
+      controller: controller,
       decoration: InputDecoration(
         hintText: "Usuario",
         fillColor: Colors.white,
@@ -82,10 +144,11 @@ Widget campoUsuario() {
   );
 }
 
-Widget campocontrasena() {
+Widget campocontrasena(TextEditingController controller) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
     child: TextField(
+      controller: controller,
       obscureText: true,
       decoration: InputDecoration(
         hintText: "Contraseña",
