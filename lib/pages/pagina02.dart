@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proy1/pages/pagHome.dart';
 import 'package:proy1/pages/pagUsers.dart';
-import 'package:proy1/pages/pagCar.dart';
+import 'package:proy1/pages/pagServicios.dart';
 import 'package:proy1/pages/pagEstado.dart';
 
 void main() {
@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _paginas = [
     PaginaHome(),
     PaginaUsers(),
-    PaginaCarrito(),
+    Servicios(),
     EstadoVehiculoPage(),
   ];
 
