@@ -5,51 +5,53 @@ class PaginaHome extends StatelessWidget {
   const PaginaHome({super.key});
 
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          child: _swiper(),
-        ),
-        Container(
-          height: 400,
-          child: ListView(
-            children: [
-              Container(
-                child: Image.network(
-                    "https://hvhindustrial.com/images/frontend_images/blogs/1592499808Electric-Motor.jpg"),
-              ),
-              Column(
-                children: [
-                  Text("MOTOR ELECTRICO"),
-                  TextButton(onPressed: () {}, child: Text("Comprar"))
-                ],
-              ),
-              //2
-              Container(
-                child: Image.network(
-                    "https://cdn-images.motor.es/image/m/720w.webp/fotos-diccionario/2019/11/bujia-tipos-averias-mantenimiento_1573747483.jpg"),
-              ),
-              Column(
-                children: [
-                  Text("Bujia"),
-                  TextButton(onPressed: () {}, child: Text("Comprar"))
-                ],
-              ),
-              //3
-              Container(
-                child: Image.network(
-                    "https://stpimagecdn.imgix.net/wp-content/uploads/sites/3/product-images/17078B_01.png?auto=format%2Ccompress&fit=crop&w=600&max-h=600"),
-              ),
-              Column(
-                children: [
-                  Text("Liquido para dirección hidraulica"),
-                  TextButton(onPressed: () {}, child: Text("Comprar"))
-                ],
-              )
-            ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            child: _swiper(),
           ),
-        ),
-      ],
+          Container(
+            height: 400,
+            child: ListView(
+              children: [
+                Container(
+                  child: Image.network(
+                      "https://hvhindustrial.com/images/frontend_images/blogs/1592499808Electric-Motor.jpg"),
+                ),
+                Column(
+                  children: [
+                    Text("MOTOR ELECTRICO"),
+                    TextButton(onPressed: () {}, child: Text("Comprar"))
+                  ],
+                ),
+                //2
+                Container(
+                  child: Image.network(
+                      "https://cdn-images.motor.es/image/m/720w.webp/fotos-diccionario/2019/11/bujia-tipos-averias-mantenimiento_1573747483.jpg"),
+                ),
+                Column(
+                  children: [
+                    Text("Bujia"),
+                    TextButton(onPressed: () {}, child: Text("Comprar"))
+                  ],
+                ),
+                //3
+                Container(
+                  child: Image.network(
+                      "https://stpimagecdn.imgix.net/wp-content/uploads/sites/3/product-images/17078B_01.png?auto=format%2Ccompress&fit=crop&w=600&max-h=600"),
+                ),
+                Column(
+                  children: [
+                    Text("Liquido para dirección hidraulica"),
+                    TextButton(onPressed: () {}, child: Text("Comprar"))
+                  ],
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

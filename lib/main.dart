@@ -15,7 +15,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,163 +37,181 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _controllerUsuario = TextEditingController();
+  final TextEditingController _controllerContrasena = TextEditingController();
+  final AuthController _authController = AuthController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: cuerpo(context),
     );
   }
-}
 
-Widget cuerpo(BuildContext context) {
-  final controllerUsuario = TextEditingController();
-  final controllerContrasena = TextEditingController();
-  final authController = AuthController();
-
-  return Container(
-    color: Colors.black,
-    child: Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        nombre(),
-        campoUsuario(controllerUsuario),
-        campocontrasena(controllerContrasena),
-        SizedBox(height: 10),
-        // botonEntrar(context),
-        TextButton(
-          style: const ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(Colors.blueAccent),
-            padding: MaterialStatePropertyAll<EdgeInsets>(
-                EdgeInsets.symmetric(horizontal: 100, vertical: 10)),
-          ),
-          onPressed: () async {
-            final email = controllerUsuario.text;
-            final password = controllerContrasena.text;
-
-            final response = await authController.login(email, password);
-
-            print(response['status']);
-
-            if (response['status']) {
-              // Inicio de sesión exitoso, puedes hacer lo que necesites con la respuesta del servidor
-              print('Inicio de sesión exitoso');
-              print('Token: ${response['token']}');
-              // Realiza la navegación a la siguiente pantalla aquí.
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Pagina02(),
-                ),
-              );
-            } else {
-              // Inicio de sesión fallido, muestra un mensaje de error al usuario
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Error de inicio de sesión'),
-                    content: Text(response['error']),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context); // Cierra el cuadro de diálogo
-                        },
-                        child: Text('OK'),
+  Widget cuerpo(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            width: 300,
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey, // Agregar el formulario y la clave global
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    child: Image.network("http://13.59.242.45/assets/images/logo-login.png"),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(
+                      "TALLER Baljeet",
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  );
-                },
-              );
-            }
-          },
-          child: const Text(
-            "Entrar",
-            style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      "Iniciar Sesión",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  campoUsuario(_controllerUsuario),
+                  campoContrasena(_controllerContrasena),
+                  const SizedBox(height: 10),
+                  TextButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                      ),
+                    ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        final email = _controllerUsuario.text;
+                        final password = _controllerContrasena.text;
+
+                        final response = await _authController.login(email, password);
+
+                        print(response['status']);
+
+                        if (response['status']) {
+                          print('Inicio de sesión exitoso');
+                          print('Token: ${response['token']}');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Pagina02(),
+                            ),
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Error de inicio de sesión'),
+                                content: Text(response['error']),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      }
+                    },
+                    child: const Text(
+                      "Entrar",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  registrar(context),
+                ],
+              ),
+            ),
           ),
         ),
-        SizedBox(
-          height: 10,
-        ),
-        registrar(context),
-      ],
-    )),
-  );
-}
+      ),
+    );
+  }
 
-Widget nombre() {
-  return Text(
-    "Iniciar Sesión",
-    style: TextStyle(
-        color: Colors.white, fontSize: 35.0, fontWeight: FontWeight.bold),
-  );
-}
-
-Widget campoUsuario(TextEditingController controller) {
+  Widget campoUsuario(TextEditingController controller) {
   return Container(
-    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-    child: TextField(
+    padding: const EdgeInsets.all(10),
+    child: TextFormField(
       controller: controller,
-      decoration: InputDecoration(
-        hintText: "Usuario",
+      decoration: const InputDecoration(
+        hintText: "Correo Electrónico",
         fillColor: Colors.white,
         filled: true,
       ),
+      validator: (value) {
+        if (value?.isEmpty ?? true) { // Verifica si el valor es nulo o está vacío
+          return 'Por favor, ingrese su correo electrónico';
+        }
+        return null;
+      },
     ),
   );
 }
 
-Widget campocontrasena(TextEditingController controller) {
+Widget campoContrasena(TextEditingController controller) {
   return Container(
-    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-    child: TextField(
+    padding: const EdgeInsets.all(10),
+    child: TextFormField(
       controller: controller,
       obscureText: true,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: "Contraseña",
         fillColor: Colors.white,
         filled: true,
       ),
+      validator: (value) {
+        if (value?.isEmpty ?? true) { // Verifica si el valor es nulo o está vacío
+          return 'Por favor, ingrese una contraseña';
+        }
+        return null;
+      },
     ),
   );
 }
 
-Widget botonEntrar(BuildContext context) {
-  return TextButton(
-    style: ButtonStyle(
-      backgroundColor: MaterialStatePropertyAll(Colors.blueAccent),
-      padding: MaterialStatePropertyAll<EdgeInsets>(
-          EdgeInsets.symmetric(horizontal: 100, vertical: 10)),
-    ),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Pagina02(),
+  Widget registrar(BuildContext context) {
+    return TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
+        padding: MaterialStateProperty.all(
+          const EdgeInsets.symmetric(horizontal: 77, vertical: 10),
         ),
-      );
-    },
-    child: Text(
-      "Entrar",
-      style: TextStyle(color: Colors.white, fontSize: 15),
-    ),
-  );
-}
-
-Widget registrar(BuildContext context) {
-  return TextButton(
-    style: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(Colors.blueAccent),
-        padding: MaterialStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: 77, vertical: 10))),
-    onPressed: () {
-      Navigator.push(
+      ),
+      onPressed: () {
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => register(),
-          ));
-    },
-    child: Text("Registrarse",
-        style: TextStyle(color: Colors.white, fontSize: 15)),
-  );
+          ),
+        );
+      },
+      child: const Text("Registrarse", style: TextStyle(color: Colors.white, fontSize: 15)),
+    );
+  }
 }
