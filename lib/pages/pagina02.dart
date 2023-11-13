@@ -3,6 +3,7 @@ import 'package:proy1/pages/pagHome.dart';
 import 'package:proy1/pages/pagUsers.dart';
 import 'package:proy1/pages/pagServicios.dart';
 import 'package:proy1/pages/pagEstado.dart';
+import 'package:proy1/main.dart';
 import 'package:proy1/controller/AuthController.dart';
 
 void main() {
@@ -49,8 +50,10 @@ class Pagina02 extends StatelessWidget {
           title: 'TALLER MECÁNICO',
           onLogout: () {
             _authController.logout();
-            // Puedes agregar aquí la lógica para navegar a la pantalla de inicio de sesión
-            // o a la pantalla que desees después del cierre de sesión.
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()), // Reemplaza con la pantalla de inicio de sesión
+              (route) => false,);
           },
         ),
       ),
