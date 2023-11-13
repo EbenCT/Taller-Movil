@@ -19,5 +19,10 @@ class AuthController {
 
     return response;
   }
+    Future<void> logout() async {
+    await authService.logout();
+    isLoggedIn = false;
+  }
+
 }
 

@@ -3,6 +3,7 @@ import 'package:proy1/pages/pagHome.dart';
 import 'package:proy1/pages/pagUsers.dart';
 import 'package:proy1/pages/pagServicios.dart';
 import 'package:proy1/pages/pagEstado.dart';
+import 'package:proy1/controller/AuthController.dart';
 
 void main() {
   runApp(const Pagina02());
@@ -13,6 +14,8 @@ class Pagina02 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthController _authController = AuthController();
+
     return WillPopScope(
       onWillPop: () async {
         // Muestra el cuadro de diálogo y retorna true si el usuario confirma la salida
@@ -42,15 +45,24 @@ class Pagina02 extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const MyHomePage(title: 'TALLER MECÁNICO'),
+        home: MyHomePage(
+          title: 'TALLER MECÁNICO',
+          onLogout: () {
+            _authController.logout();
+            // Puedes agregar aquí la lógica para navegar a la pantalla de inicio de sesión
+            // o a la pantalla que desees después del cierre de sesión.
+          },
+        ),
       ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.onLogout});
   final String title;
+  final VoidCallback onLogout;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -112,6 +124,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 _cambiarPagina(3);
               },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Cerrar Sesión"),
+              onTap: widget.onLogout,
             ),
           ],
         ),
