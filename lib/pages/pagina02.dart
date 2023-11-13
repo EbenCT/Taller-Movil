@@ -3,6 +3,7 @@ import 'package:proy1/pages/pagHome.dart';
 import 'package:proy1/pages/pagUsers.dart';
 import 'package:proy1/pages/pagServicios.dart';
 import 'package:proy1/pages/pagEstado.dart';
+import 'package:proy1/pages/pagMiVehiculo.dart'; // Importa la nueva página
 import 'package:proy1/main.dart';
 import 'package:proy1/controller/AuthController.dart';
 
@@ -52,8 +53,9 @@ class Pagina02 extends StatelessWidget {
             _authController.logout();
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => MyApp()), // Reemplaza con la pantalla de inicio de sesión
-              (route) => false,);
+              MaterialPageRoute(builder: (context) => MyApp()),
+              (route) => false,
+            );
           },
         ),
       ),
@@ -77,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
     PaginaUsers(),
     Servicios(),
     EstadoVehiculoPage(),
+    MiVehiculoPage(),
   ];
 
   void _cambiarPagina(int index) {
@@ -126,6 +129,13 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text("Estado del Vehículo"),
               onTap: () {
                 _cambiarPagina(3);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.directions_car),
+              title: Text("Mi Vehículo"), // Agrega la nueva opción
+              onTap: () {
+                _cambiarPagina(4);
               },
             ),
             ListTile(
