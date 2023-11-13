@@ -97,110 +97,125 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget cuerpo(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            width: 300,
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: _formKey, // Agregar el formulario y la clave global
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Image.network("http://13.59.242.45/assets/images/logo-login.png"),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Text(
-                      "TALLER Baljeet",
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
+ Widget cuerpo(BuildContext context) {
+  return Container(
+    color: Colors.white,
+    child: Center(
+      child: SingleChildScrollView(
+        child: Container(
+          width: 300,
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey, // Agregar el formulario y la clave global
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Image.network("http://13.59.242.45/assets/images/logo-login.png"),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "TALLER ",
+                          style: TextStyle(
+                            color: Color(0xFF780001), // Color hexadecimal para #780001
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "BALJEET",
+                          style: TextStyle(
+                            color: Colors.black, // Puedes ajustar el color según tus preferencias
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      "Iniciar Sesión",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    "Iniciar Sesión",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  campoUsuario(_controllerUsuario),
-                  campoContrasena(_controllerContrasena),
-                  const SizedBox(height: 10),
-                  TextButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
-                      padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
-                      ),
+                ),
+                campoUsuario(_controllerUsuario),
+                campoContrasena(_controllerContrasena),
+                const SizedBox(height: 10),
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
                     ),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final email = _controllerUsuario.text;
-                        final password = _controllerContrasena.text;
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      final email = _controllerUsuario.text;
+                      final password = _controllerContrasena.text;
 
-                        final response = await _authController.login(email, password);
+                      final response = await _authController.login(email, password);
 
-                        print(response['status']);
+                      print(response['status']);
 
-                        if (response['status']) {
-                          print('Inicio de sesión exitoso');
-                          print('Token: ${response['token']}');
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Pagina02(),
-                            ),
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('Error de inicio de sesión'),
-                                content: Text(response['error']),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
+                      if (response['status']) {
+                        print('Inicio de sesión exitoso');
+                        print('Token: ${response['token']}');
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Pagina02(),
+                          ),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Error de inicio de sesión'),
+                              content: Text(response['error']),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       }
-                    },
-                    child: const Text(
-                      "Entrar",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
+                    }
+                  },
+                  child: const Text(
+                    "Entrar",
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  registrar(context),
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                registrar(context),
+              ],
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget campoUsuario(TextEditingController controller) {
   return Container(
