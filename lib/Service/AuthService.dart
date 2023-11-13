@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   final Dio _dio = Dio(); // Instancia de DIO
 
@@ -33,5 +33,14 @@ class AuthService {
         'error': 'Error de red',
       };
     }
+  }
+  Future<bool> isLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey('token'); // Verifica si hay un token almacenado
+  }
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token'); // Elimina el token al cerrar sesión
   }
 }

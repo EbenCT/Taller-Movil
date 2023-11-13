@@ -11,17 +11,39 @@ void main() {
 class Pagina02 extends StatelessWidget {
   const Pagina02({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return WillPopScope(
+      onWillPop: () async {
+        // Muestra el cuadro de diálogo y retorna true si el usuario confirma la salida
+        bool exitConfirmed = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('¿Estás seguro de que quieres salir?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Salir'),
+              ),
+            ],
+          ),
+        );
+
+        return exitConfirmed ?? false;
+      },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(title: 'TALLER MECÁNICO'),
       ),
-      home: const MyHomePage(title: 'TALLER MECÁNICO'),
     );
   }
 }

@@ -15,7 +15,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final AuthController _authController = AuthController();
   @override
+  void initState() {
+    super.initState();
+    _authController.checkSession();
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -42,10 +48,52 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controllerContrasena = TextEditingController();
   final AuthController _authController = AuthController();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: cuerpo(context),
+ @override
+  void initState() {
+    super.initState();
+    _authController.checkSession();
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('¿Salir de la aplicación?'),
+            content: const Text('¿Estás seguro de que quieres salir?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Sí'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+@override 
+ Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: FutureBuilder<void>(
+          future: _authController.checkSession(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (_authController.isLoggedIn) {
+                return Pagina02();
+              } else {
+                return cuerpo(context);
+              }
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
+        ),
+      ),
     );
   }
 
@@ -109,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (response['status']) {
                           print('Inicio de sesión exitoso');
                           print('Token: ${response['token']}');
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => Pagina02(),

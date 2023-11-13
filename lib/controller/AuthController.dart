@@ -2,12 +2,22 @@ import 'package:proy1/Service/AuthService.dart';
 
 class AuthController {
   final authService = AuthService();
-  // Puedes agregar métodos para manejar la lógica de autenticación y las llamadas a la API aquí.
+  bool isLoggedIn = false;
+
+  Future<void> checkSession() async {
+    isLoggedIn = await authService.isLoggedIn();
+    print('isLoggedIn: $isLoggedIn');
+  }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    // Realiza la lógica de autenticación y la llamada a la API aquí.
-    // Devuelve true si el inicio de sesión es exitoso, o false en caso contrario.
-    return await authService.login(
-        username, password); // Simulando un inicio de sesión exitoso.
+    final response = await authService.login(username, password);
+
+    if (response['status']) {
+      print('Inicio de sesión exitoso'); // Añade este mensaje de impresión
+      isLoggedIn = true; // Asegúrate de que se actualice después de un inicio de sesión exitoso
+    }
+
+    return response;
   }
 }
+
