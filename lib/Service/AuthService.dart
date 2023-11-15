@@ -10,6 +10,7 @@ class AuthService {
     try {
       final response = await _dio.post(
         'http://18.216.45.210/api/login',
+        
         data: {
           'email': email,
           'password': password,
@@ -19,7 +20,7 @@ class AuthService {
       if (response.statusCode == 200) {
         _token = response.data['token'];
         _userId = response.data['usuario']['id'];
-        
+       // getClientById();
         print(response);
         return response.data;
       } else {
@@ -48,10 +49,10 @@ class AuthService {
     await prefs.remove('token');
   }
 
-  Future<Map<String, dynamic>> getMyClient() async {
+Future<Map<String, dynamic>> getClientById() async {
     try {
       final response = await _dio.get(
-        'http://18.216.45.210/api/clientes',
+        'http://18.216.45.210/api/clientes/$_userId/datos',
         options: Options(
           headers: {
             'Authorization': 'Bearer $_token',
@@ -60,23 +61,11 @@ class AuthService {
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> clients = response.data['data'];
-        Map<String, dynamic>? client = clients.firstWhere(
-          (c) => c['usuario_id'] == _userId,
-          orElse: () => null,
-        );
-
-        if (client != null) {
-          return {
-            'status': true,
-            'data': client,
-          };
-        } else {
-          return {
-            'status': false,
-            'error': 'Cliente no encontrado para el usuario',
-          };
-        }
+        print(response);
+        return {         
+          'status': true,
+          'data': response.data,
+        };
       } else {
         return {
           'status': false,
