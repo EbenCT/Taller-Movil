@@ -48,7 +48,7 @@ class _MiVehiculoPageState extends State<MiVehiculoPage> {
   }
 
   Future<void> _loadVehiculoInfo() async {
-    final response = await _authService.getVehicleByClientId(_clienteInfo['id']);
+    final response = await _authService.getVehicleByClientId();
 
     if (response['status']) {
       setState(() {

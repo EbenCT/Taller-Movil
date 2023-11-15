@@ -5,6 +5,8 @@ class AuthService {
   final Dio _dio = Dio(); // Instancia de DIO
   String? _token;
   int? _userId;
+  int? _clienteId;
+  int? _vehiculoId;
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
@@ -20,8 +22,11 @@ class AuthService {
       if (response.statusCode == 200) {
         _token = response.data['token'];
         _userId = response.data['usuario']['id'];
-       // getClientById();
+        await getClientById();
+        print('clienteId: $_clienteId');
+        await getVehicleByClientId();
         print(response);
+        print(_userId);
         return response.data;
       } else {
         print(response);
@@ -61,7 +66,9 @@ Future<Map<String, dynamic>> getClientById() async {
       );
 
       if (response.statusCode == 200) {
+        _clienteId = response.data['data']['id'];
         print(response);
+        print('clienteId: $_clienteId');
         return {         
           'status': true,
           'data': response.data,
@@ -80,45 +87,33 @@ Future<Map<String, dynamic>> getClientById() async {
       };
     }
   }
-  Future<Map<String, dynamic>> getVehicleByClientId(int clientId) async {
+
+  Future<Map<String, dynamic>> getVehicleByClientId() async {
+    print('clienteId: $_clienteId');
   try {
     final response = await _dio.get(
-      'http://18.216.45.210/api/vehiculos', // Reemplaza con la URL de tu API
+      'http://18.216.45.210/api/vehiculos/$_clienteId/autos',
       options: Options(
         headers: {
           'Authorization': 'Bearer $_token',
         },
       ),
     );
-
+print(response.data);
     if (response.statusCode == 200) {
-      // Busca el vehículo correspondiente al cliente
-      List<dynamic> vehicles = response.data['data'];
-      Map<String, dynamic>? vehicle = vehicles.firstWhere(
-        (v) => v['cliente_id'] == clientId,
-        orElse: () => null,
-      );
-
-      if (vehicle != null) {
-        return {
-          'status': true,
-          'data': vehicle,
-        };
-      } else {
-        return {
-          'status': false,
-          'error': 'Vehículo no encontrado para el cliente',
-        };
-      }
+        print(response);
+        //print(_clienteId);
+      return {
+        'status': true,
+        'data': response.data,
+      };
     } else {
-      // Maneja errores de obtención del vehículo aquí
       return {
         'status': false,
-        'error': 'Error al obtener información del vehículo',
+        'error': 'Error al obtener información del vehiculo',
       };
     }
   } catch (e) {
-    // Maneja errores de red o excepciones aquí
     print('Error: $e');
     return {
       'status': false,
@@ -126,4 +121,5 @@ Future<Map<String, dynamic>> getClientById() async {
     };
   }
 }
+
 }
