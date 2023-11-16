@@ -1,89 +1,43 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-// Definición de la clase EstadoVehiculo
-class EstadoVehiculo {
-  final int id;
-  final String estado;
-  final String fecha;
-  final String descripcion;
-  final int vehiculoId;
-
-  EstadoVehiculo({
-    required this.id,
-    required this.estado,
-    required this.fecha,
-    required this.descripcion,
-    required this.vehiculoId,
-  });
-
-  factory EstadoVehiculo.fromJson(Map<String, dynamic> json) {
-    return EstadoVehiculo(
-      id: json['id'],
-      estado: json['estado'],
-      fecha: json['fecha'],
-      descripcion: json['descripcion'],
-      vehiculoId: json['vehiculo_id'],
-    );
-  }
-}
 
 class EstadoVehiculoPage extends StatefulWidget {
+  final int vehiculoId;
+
+  EstadoVehiculoPage({required this.vehiculoId});
+
   @override
   _EstadoVehiculoPageState createState() => _EstadoVehiculoPageState();
 }
 
 class _EstadoVehiculoPageState extends State<EstadoVehiculoPage> {
-late List<EstadoVehiculo> estados = [];
+  final Dio _dio = Dio(); // Instancia de Dio para hacer peticiones HTTP
+  List<dynamic> _estados = [];
 
   @override
   void initState() {
     super.initState();
-    _cargarEstados();
+    _fetchEstadoData();
   }
 
-  Future<void> _cargarEstados() async {
-    final response = await http.get(Uri.parse('http://18.216.45.210/api/EstadoVehiculo'));
+  Future<void> _fetchEstadoData() async {
+    try {
+      final response = await _dio.get(
+        'http://18.216.45.210/api/estado_vehiculo/${widget.vehiculoId}/estados',
+      );
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      setState(() {
-        estados = data.map((item) => EstadoVehiculo.fromJson(item)).toList();
-      });
-    } else {
-      // Manejar errores de carga de datos
-      print('Error al cargar estados del vehículo');
+      if (response.statusCode == 200) {
+        setState(() {
+          _estados = response.data;
+        });
+      } else {
+        // Manejar errores si la solicitud no es exitosa (código de estado diferente de 200)
+        print('Error al cargar datos');
+      }
+    } catch (e) {
+      // Manejar errores de red
+      print('Error de red: $e');
     }
-  }
-
-  void _mostrarDetalles(EstadoVehiculo estado) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Detalles del Estado del Vehículo'),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('ID: ${estado.id}'),
-              Text('Estado: ${estado.estado}'),
-              Text('Fecha: ${estado.fecha}'),
-              Text('Descripción: ${estado.descripcion}'),
-              Text('ID del Vehículo: ${estado.vehiculoId}'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cerrar'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -92,16 +46,24 @@ late List<EstadoVehiculo> estados = [];
       appBar: AppBar(
         title: Text('Estado del Vehículo'),
       ),
-      body: estados != null
+      body: _estados.isNotEmpty
           ? ListView.builder(
-              itemCount: estados.length,
+              itemCount: _estados.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(estados[index].estado),
-                  subtitle: Text(estados[index].fecha),
-                  onTap: () {
-                    _mostrarDetalles(estados[index]);
-                  },
+                final estado = _estados[index];
+                return Card(
+                  margin: EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text('Estado: ${estado['estado']}'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Fecha: ${estado['fecha']}'),
+                        Text('Descripción: ${estado['descripcion']}'),
+                        Text('ID del vehículo: ${estado['vehiculo_id']}'),
+                      ],
+                    ),
+                  ),
                 );
               },
             )

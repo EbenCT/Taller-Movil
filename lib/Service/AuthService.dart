@@ -6,7 +6,7 @@ class AuthService {
   String? _token;
   static int? _userId;
   static int? _clienteId;
-  static int? _vehiculoId;
+ // static int? _vehiculoId;
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
@@ -101,9 +101,9 @@ Future<Map<String, dynamic>> getClientById() async {
     );
 print(response.data);
     if (response.statusCode == 200) {
-      _vehiculoId = response.data[0]['id'];
+      //_vehiculoId = response.data[0]['id'];
         print(response.data);
-        print(_vehiculoId);
+      //  print(_vehiculoId);
       return {
         'status': true,
         'data': response.data,

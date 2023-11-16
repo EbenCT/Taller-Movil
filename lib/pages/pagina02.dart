@@ -78,7 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
     PaginaHome(),
     PaginaUsers(),
     Servicios(),
-    EstadoVehiculoPage(),
     MiVehiculoPage(),
   ];
 
@@ -118,24 +117,17 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.directions_car),
+              leading: Icon(Icons.build_rounded),
               title: Text("Servicios"),
               onTap: () {
                 _cambiarPagina(2);
               },
             ),
             ListTile(
-              leading: Icon(Icons.car_rental),
-              title: Text("Estado del Vehículo"),
-              onTap: () {
-                _cambiarPagina(3);
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.directions_car),
               title: Text("Mi Vehículo"), // Agrega la nueva opción
               onTap: () {
-                _cambiarPagina(4);
+                _cambiarPagina(3);
               },
             ),
             ListTile(

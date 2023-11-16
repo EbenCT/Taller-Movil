@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proy1/Service/AuthService.dart';
+import 'package:proy1/pages/pagEstado.dart';
 
 class MiVehiculoPage extends StatefulWidget {
   @override
@@ -22,7 +23,6 @@ class _MiVehiculoPageState extends State<MiVehiculoPage> {
     if (response['status']) {
       setState(() {
         _vehiculoInfo = response;
-        print(_vehiculoInfo);
       });
     } else {
       showDialog(
@@ -45,16 +45,54 @@ class _MiVehiculoPageState extends State<MiVehiculoPage> {
     }
   }
 
-  Widget _buildDetailRow(String title, String value) {
-    return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+  Widget _buildDetailRow(String title1, String value1, String title2, String value2) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title1,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                value1,
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      subtitle: Text(value),
+        SizedBox(width: 20),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title2,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                value2,
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -69,22 +107,53 @@ class _MiVehiculoPageState extends State<MiVehiculoPage> {
               itemCount: _vehiculoInfo!['data'].length,
               itemBuilder: (context, index) {
                 final vehiculo = _vehiculoInfo!['data'][index];
-                Color colorFondo = index.isEven ? Colors.white : const Color.fromARGB(255, 138, 136, 136)!;
-
 
                 return Container(
-                  color: colorFondo,
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildDetailRow('Placa', vehiculo['placa']),
                       _buildDetailRow(
-                          'Número de Chasis', vehiculo['nro_chasis']),
-                      _buildDetailRow('Color', vehiculo['color']),
-                      _buildDetailRow('Año', vehiculo['año'].toString()),
-                      _buildDetailRow('Marca', vehiculo['marca_nombre']),
-                      _buildDetailRow('Modelo', vehiculo['modelo_nombre']),
+                        'Placa',
+                        vehiculo['placa'],
+                        'Número de Chasis',
+                        vehiculo['nro_chasis'],
+                      ),
                       _buildDetailRow(
-                          'Tipo', vehiculo['tipoVehiculo_nombre']),
+                        'Color',
+                        vehiculo['color'],
+                        'Año',
+                        vehiculo['año'].toString(),
+                      ),
+                      _buildDetailRow(
+                        'Marca',
+                        vehiculo['marca_nombre'],
+                        'Modelo',
+                        vehiculo['modelo_nombre'],
+                      ),
+                      _buildDetailRow(
+                        'Tipo',
+                        vehiculo['tipoVehiculo_nombre'],
+                        '',
+                        '',
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EstadoVehiculoPage(vehiculoId: vehiculo['id']),
+                            ),
+                          );
+                        },
+                        child: Text('Ver estado'),
+                      ),
                     ],
                   ),
                 );
