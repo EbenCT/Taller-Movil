@@ -4,9 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   final Dio _dio = Dio(); // Instancia de DIO
   String? _token;
-  int? _userId;
-  int? _clienteId;
-  int? _vehiculoId;
+  static int? _userId;
+  static int? _clienteId;
+  static int? _vehiculoId;
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
@@ -101,8 +101,9 @@ Future<Map<String, dynamic>> getClientById() async {
     );
 print(response.data);
     if (response.statusCode == 200) {
-        print(response);
-        //print(_clienteId);
+      _vehiculoId = response.data[0]['id'];
+        print(response.data);
+        print(_vehiculoId);
       return {
         'status': true,
         'data': response.data,

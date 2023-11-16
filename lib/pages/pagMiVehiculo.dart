@@ -8,43 +8,12 @@ class MiVehiculoPage extends StatefulWidget {
 
 class _MiVehiculoPageState extends State<MiVehiculoPage> {
   final AuthService _authService = AuthService();
-  late Map<String, dynamic> _clienteInfo;
-  Map<String, dynamic>? _vehiculoInfo; // Cambio aquí
+  Map<String, dynamic>? _vehiculoInfo;
 
   @override
   void initState() {
     super.initState();
-    _loadClienteInfo();
-  }
-
-  Future<void> _loadClienteInfo() async {
-    final response = await _authService.getClientById();
-
-    if (response['status']) {
-      setState(() {
-        _clienteInfo = response;
-      });
-      _loadVehiculoInfo();
-    } else {
-      // Maneja el error de obtención del cliente
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Error al obtener información del cliente'),
-            content: Text(response['error']),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+    _loadVehiculoInfo();
   }
 
   Future<void> _loadVehiculoInfo() async {
@@ -53,9 +22,9 @@ class _MiVehiculoPageState extends State<MiVehiculoPage> {
     if (response['status']) {
       setState(() {
         _vehiculoInfo = response;
+        print(_vehiculoInfo);
       });
     } else {
-      // Maneja el error de obtención del vehículo
       showDialog(
         context: context,
         builder: (context) {
@@ -76,26 +45,52 @@ class _MiVehiculoPageState extends State<MiVehiculoPage> {
     }
   }
 
+  Widget _buildDetailRow(String title, String value) {
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(value),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mi Vehículo'),
       ),
-      body: Center(
-        child: _vehiculoInfo != null // Cambio aquí
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Placa: ${_vehiculoInfo!['placa']}'),
-                  Text('Número de Chasis: ${_vehiculoInfo!['nro_chasis']}'),
-                  Text('Color: ${_vehiculoInfo!['color']}'),
-                  Text('Año: ${_vehiculoInfo!['año']}'),
-                  // Agrega más widgets para mostrar otros detalles del vehículo
-                ],
-              )
-            : CircularProgressIndicator(),
-      ),
+      body: _vehiculoInfo != null
+          ? ListView.builder(
+              itemCount: _vehiculoInfo!['data'].length,
+              itemBuilder: (context, index) {
+                final vehiculo = _vehiculoInfo!['data'][index];
+                Color colorFondo = index.isEven ? Colors.white : const Color.fromARGB(255, 138, 136, 136)!;
+
+
+                return Container(
+                  color: colorFondo,
+                  child: Column(
+                    children: [
+                      _buildDetailRow('Placa', vehiculo['placa']),
+                      _buildDetailRow(
+                          'Número de Chasis', vehiculo['nro_chasis']),
+                      _buildDetailRow('Color', vehiculo['color']),
+                      _buildDetailRow('Año', vehiculo['año'].toString()),
+                      _buildDetailRow('Marca', vehiculo['marca_nombre']),
+                      _buildDetailRow('Modelo', vehiculo['modelo_nombre']),
+                      _buildDetailRow(
+                          'Tipo', vehiculo['tipoVehiculo_nombre']),
+                    ],
+                  ),
+                );
+              },
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }
