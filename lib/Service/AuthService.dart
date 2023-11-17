@@ -122,5 +122,69 @@ print(response.data);
     };
   }
 }
+  Future<Map<String, dynamic>> getPagosByClientId() async {
+    print('clienteId: $_clienteId');
+  try {
+    final response = await _dio.get(
+      'http://18.216.45.210/api/pagos-cliente/$_clienteId',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+      ),
+    );
+    print(response.data);
+    if (response.statusCode == 200) {
+        print(response.data);
+      return {
+        'status': true,
+        'data': response.data,
+      };
+    } else {
+      return {
+        'status': false,
+        'error': 'Error al obtener pagos',
+      };
+    }
+  } catch (e) {
+    print('Error: $e');
+    return {
+      'status': false,
+      'error': 'Error de red',
+    };
+  }
+}
+  Future<Map<String, dynamic>> getOrdenesByClientId() async {
+    print('clienteId: $_clienteId');
+  try {
+    final response = await _dio.get(
+      'http://18.216.45.210/api/ordenes-cliente/$_clienteId',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+      ),
+    );
+    print(response.data);
+    if (response.statusCode == 200) {
+        print(response.data);
+      return {
+        'status': true,
+        'data': response.data,
+      };
+    } else {
+      return {
+        'status': false,
+        'error': 'Error al obtener ordenes',
+      };
+    }
+  } catch (e) {
+    print('Error: $e');
+    return {
+      'status': false,
+      'error': 'Error de red',
+    };
+  }
+}
 
 }
