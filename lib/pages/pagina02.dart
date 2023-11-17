@@ -3,7 +3,8 @@ import 'package:proy1/pages/pagHome.dart';
 import 'package:proy1/pages/pagUsers.dart';
 import 'package:proy1/pages/pagServicios.dart';
 import 'package:proy1/pages/pagPagos.dart';
-import 'package:proy1/pages/pagMiVehiculo.dart'; // Importa la nueva página
+import 'package:proy1/pages/pagMiVehiculo.dart'; 
+import 'package:proy1/pages/ordenTrabajo.dart';
 import 'package:proy1/main.dart';
 import 'package:proy1/controller/AuthController.dart';
 
@@ -80,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Servicios(),
     MiVehiculoPage(),
     PagosPage(),
+    OrdenesTrabajoPage(),
   ];
 
   void _cambiarPagina(int index) {
@@ -136,6 +138,13 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text("Mis Pagos"), // Agrega la nueva opción
               onTap: () {
                 _cambiarPagina(4);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.construction),
+              title: Text("Orden de Trabajo"), // Agrega la nueva opción
+              onTap: () {
+                _cambiarPagina(5);
               },
             ),
             ListTile(
