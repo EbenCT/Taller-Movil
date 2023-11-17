@@ -23,7 +23,7 @@ class _PaginaUsersState extends State<PaginaUsers> {
   Future<void> _loadUserData() async {
     final userData = await _authService.getClientById();
     setState(() {
-      _userData = userData['data'];
+      _userData = userData['data']['data'];
       print(_userData);
     });
   }
@@ -36,80 +36,103 @@ class _PaginaUsersState extends State<PaginaUsers> {
           padding: EdgeInsets.symmetric(horizontal: 50),
           child: Center(
             child: Text(
-              "Datos usuario",
-              style: TextStyle(fontSize: 20),
+              "Mi Perfil",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
           ),
         ),
-        if (_userData != null) ...[
-          nombreUsers('Nombre: ${_userData!['nombre']} ${_userData!['apellido']}'), // Accede a 'nombre' y 'apellido' dentro de '_userData'
-          userDataField('ID', _userData!['id'].toString()), // Accede a 'id' dentro de '_userData'
-          userDataField('Teléfono', _userData!['telefono']), // Accede a 'telefono' dentro de '_userData'
-          userDataField('Dirección', _userData!['direccion']), // Accede a 'direccion' dentro de '_userData'
-          userDataField('Género', _userData!['genero']), // Accede a 'genero' dentro de '_userData'
+        if (_userData != null)...[
+          Container(
+            height: 120,
+            child: Image.network(
+              "https://i.pinimg.com/originals/6f/57/76/6f57760966a796644b8cfb0fbc449843.png",
+            ),
+          ),
           SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              BotEditar(),
-              SizedBox(width: 30),
-              BotGuardar(),
-            ],
+          Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Nombres:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${_userData!['nombre']}',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Apellidos:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${_userData!['apellido']}',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Teléfono:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${_userData!['telefono']}',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Dirección:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${_userData!['direccion']}',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Género:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${_userData!['genero']}',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BotEditar(),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ],
     );
   }
 
-  Widget nombreUsers(String nombre) {
-    return Center(
-      child: Container(
-        child: Text(nombre, style: TextStyle(fontSize: 20)),
-      ),
-    );
-  }
-
-  Widget userDataField(String label, String value) {
-    return Center(
-      child: Container(
-        width: 300,
-        child: Text("$label: $value", style: TextStyle(fontSize: 20)),
-      ),
-    );
-  }
-
   Widget BotEditar() {
-    return TextButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(Colors.blueAccent),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: Colors.blueAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
       onPressed: () {
         setState(() {
           // Habilitar edición
         });
       },
-      child: Text(
-        "Editar",
-        style: TextStyle(color: Colors.white, fontSize: 20),
-      ),
-    );
-  }
-
-  Widget BotGuardar() {
-    return TextButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(Colors.blueAccent),
-      ),
-      onPressed: () {
-        setState(() {
-          // Guardar cambios
-        });
-      },
-      child: Text(
-        "Guardar",
-        style: TextStyle(color: Colors.white, fontSize: 20),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Text(
+          "Editar",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
       ),
     );
   }
 }
-

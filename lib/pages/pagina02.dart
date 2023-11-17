@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               leading: Icon(Icons.supervised_user_circle),
-              title: Text("Usuario"),
+              title: Text("Perfil"),
               onTap: () {
                 _cambiarPagina(1);
               },
