@@ -270,7 +270,7 @@ Widget campoContrasena(TextEditingController controller) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => register(),
+            builder: (context) => RegisterPage(),
           ),
         );
       },
