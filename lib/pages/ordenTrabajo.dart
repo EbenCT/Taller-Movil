@@ -32,63 +32,62 @@ class _OrdenesTrabajoPageState extends State<OrdenesTrabajoPage> {
     });
   }
 
-  Widget _buildDetailRow(
-    String title1,
-    String value1,
-    String title2,
-    String value2,
-  ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title1,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+Widget _buildDetailRow(
+  String title1,
+  String value1,
+  String title2,
+  String value2,
+) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title1,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(height: 5),
-              Text(
-                value1,
-                style: TextStyle(
-                  fontSize: 14,
-                ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              value1,
+              style: TextStyle(
+                fontSize: 14,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        SizedBox(width: 20),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title2,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+      ),
+      SizedBox(width: 20),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title2,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(height: 5),
-              Text(
-                value2,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: value2 == 'PENDIENTE' ? Colors.red : Colors.green,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              value2,
+              style: TextStyle(
+                fontSize: 14,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
