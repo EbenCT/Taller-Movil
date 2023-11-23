@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // Importa el paquete http
+import '../utils/api_backend.dart';
 
 enum Genero { masculino, femenino }
 
@@ -22,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Genero _generoSeleccionado = Genero.masculino; // Valor por defecto
 
   Future<void> _registrarCliente() async {
-    final Uri uri = Uri.parse('http://18.216.45.210/api/clientes');
+    final Uri uri = Uri.parse('http://$apiBackend/clientes');
     final response = await http.post(
       uri,
       body: {

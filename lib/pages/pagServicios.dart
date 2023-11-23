@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../utils/api_backend.dart';
 
 class Servicios extends StatelessWidget {
   const Servicios({Key? key});
@@ -29,7 +30,7 @@ class _InicioState extends State<Inicio> {
   }
 
   Future<void> obtenerServicios() async {
-    final response = await http.get(Uri.parse('http://18.216.45.210/api/servicios'));
+    final response = await http.get(Uri.parse('http://$apiBackend/servicios'));
 
     if (response.statusCode == 200) {
       // Si la solicitud es exitosa, analiza el JSON

@@ -3,6 +3,7 @@ import 'package:proy1/controller/AuthController.dart';
 import 'package:proy1/pages/pagina02.dart';
 import 'package:proy1/pages/register.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -112,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.all(20),
-                  child: Image.network("http://13.59.242.45/assets/images/logo-login.png"),
+                  child: Image.network("http://3.148.113.33/assets/images/logo-login.png"),
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),

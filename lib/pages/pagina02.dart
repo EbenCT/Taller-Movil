@@ -7,6 +7,7 @@ import 'package:proy1/pages/pagMiVehiculo.dart';
 import 'package:proy1/pages/ordenTrabajo.dart';
 import 'package:proy1/main.dart';
 import 'package:proy1/controller/AuthController.dart';
+import 'package:proy1/Service/AuthService.dart';
 
 void main() {
   runApp(const Pagina02());
@@ -84,10 +85,28 @@ class _MyHomePageState extends State<MyHomePage> {
     OrdenesTrabajoPage(),
   ];
 
+  String? _clienteNombre = 'Nombre Cliente'; // Variable para almacenar el nombre del cliente
+  String _imagenURL = 'http://3.148.113.33/assets/images/logo-login.png';
+
   void _cambiarPagina(int index) {
     setState(() {
       _paginaActual = index;
       Navigator.pop(context); // Cierra el menú desplegable
+    });
+  }
+   @override
+  void initState() {
+    super.initState();
+    _loadClientData(); // Llama a la función para cargar los datos del cliente
+  }
+
+  Future<void> _loadClientData() async {
+    // Lógica para cargar los datos del cliente desde el AuthService
+    final clientData = await AuthService().getClientById(); // Suponiendo que esto devuelve los datos del cliente
+    print(clientData);
+    setState(() {
+      // Asigna el nombre del cliente desde los datos obtenidos
+      _clienteNombre = clientData['data']['data']['nombre'];
     });
   }
 
@@ -104,7 +123,34 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _paginas[_paginaActual],
       drawer: Drawer(
         child: ListView(
-          children: [
+          children:<Widget>[
+              DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: NetworkImage(_imagenURL),
+                  ),
+                  SizedBox(width: 10),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Bienvenido!!!',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        _clienteNombre ?? 'Nombre Cliente',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             ListTile(
               leading: Icon(Icons.home),
               title: Text("Inicio"),

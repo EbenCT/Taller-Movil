@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../utils/api_backend.dart';
 
 class PaginaHome extends StatefulWidget {
   const PaginaHome({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _PaginaHomeState extends State<PaginaHome> {
   }
 
   Future<void> _cargarProductos() async {
-    final response = await http.get(Uri.parse('http://18.216.45.210/api/productos'));
+    final response = await http.get(Uri.parse('http://$apiBackend/productos'));
 
     if (response.statusCode == 200) {
       // Si la solicitud fue exitosa, parsea el JSON

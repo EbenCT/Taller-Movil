@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/api_backend.dart';
 
 class AuthService {
   final Dio _dio = Dio(); // Instancia de DIO
@@ -11,7 +12,7 @@ class AuthService {
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await _dio.post(
-        'http://18.216.45.210/api/login',
+        'http://$apiBackend/login',
         
         data: {
           'email': email,
@@ -57,7 +58,7 @@ class AuthService {
 Future<Map<String, dynamic>> getClientById() async {
     try {
       final response = await _dio.get(
-        'http://18.216.45.210/api/clientes/$_userId/datos',
+        'http://$apiBackend/clientes/$_userId/datos',
         options: Options(
           headers: {
             'Authorization': 'Bearer $_token',
@@ -92,7 +93,7 @@ Future<Map<String, dynamic>> getClientById() async {
     print('clienteId: $_clienteId');
   try {
     final response = await _dio.get(
-      'http://18.216.45.210/api/vehiculos/$_clienteId/autos',
+      'http://$apiBackend/vehiculos/$_clienteId/autos',
       options: Options(
         headers: {
           'Authorization': 'Bearer $_token',
@@ -126,7 +127,7 @@ print(response.data);
     print('clienteId: $_clienteId');
   try {
     final response = await _dio.get(
-      'http://18.216.45.210/api/pagos-cliente/$_clienteId',
+      'http://$apiBackend/pagos-cliente/$_clienteId',
       options: Options(
         headers: {
           'Authorization': 'Bearer $_token',
@@ -158,7 +159,7 @@ print(response.data);
     print('clienteId: $_clienteId');
   try {
     final response = await _dio.get(
-      'http://18.216.45.210/api/ordenes-cliente/$_clienteId',
+      'http://$apiBackend/ordenes-cliente/$_clienteId',
       options: Options(
         headers: {
           'Authorization': 'Bearer $_token',

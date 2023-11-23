@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
+import '../utils/api_backend.dart';
 class EstadoVehiculoPage extends StatefulWidget {
   final int vehiculoId;
 
@@ -23,7 +23,7 @@ class _EstadoVehiculoPageState extends State<EstadoVehiculoPage> {
   Future<void> _fetchEstadoData() async {
     try {
       final response = await _dio.get(
-        'http://18.216.45.210/api/estado_vehiculo/${widget.vehiculoId}/estados',
+        'http://$apiBackend/estado_vehiculo/${widget.vehiculoId}/estados',
       );
 
       if (response.statusCode == 200) {

@@ -144,14 +144,14 @@ class _PagosPageState extends State<PagosPage> {
                         _buildDetailRow(
                           'Monto:',
                           pago['monto'].toString(),
-                          'Descripción:',
-                          pago['descripcion'],
+                          'Concepto:',
+                          pago['concepto'],
                         ),
                         _buildDetailRow(
                           'Factura ID:',
                           pago['factura_id'].toString(),
-                          '',
-                          '',
+                          'Estado:',
+                          pago['estado']== false ? 'PENDIENTE' : 'PAGADO',
                         ),
                         SizedBox(height: 10),
                         ElevatedButton(
