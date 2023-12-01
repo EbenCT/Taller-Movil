@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.all(20),
-                  child: Image.network("http://3.148.113.33/assets/images/logo-login.png"),
+                 // child: Image.network("http://3.148.113.33/assets/images/logo-login.png"),
                 ),
                 Container(
                   padding: const EdgeInsets.all(20),

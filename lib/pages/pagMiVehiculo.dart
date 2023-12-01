@@ -140,11 +140,11 @@ class _MiVehiculoPageState extends State<MiVehiculoPage> {
                         'Tipo:',
                         vehiculo['tipoVehiculo_nombre'],
                         'Kilometraje:',
-                        vehiculo['kilometraje'].toString(),
+                        '',//vehiculo['kilometraje'].toString(),
                       ),
                       _buildDetailRow(
                         'Tipo de Combustible:',
-                        vehiculo['combustible'],
+                        '',//vehiculo['combustible'],
                         '',
                         '',
                       ),
