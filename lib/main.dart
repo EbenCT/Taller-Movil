@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proy1/controller/AuthController.dart';
 import 'package:proy1/pages/pagina02.dart';
 import 'package:proy1/pages/register.dart';
-
-
+import 'package:flutter_localizations/flutter_localizations.dart'; // Importa las localizaciones
 void main() {
   runApp(const MyApp());
 }
@@ -31,6 +30,15 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+            // Configura el idioma local de la aplicación
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('es', 'ES'), // Español
+      ],
       home: const MyHomePage(title: 'TALLER MECÁNICO'),
     );
   }
