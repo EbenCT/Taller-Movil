@@ -5,6 +5,7 @@ import 'package:proy1/pages/pagServicios.dart';
 import 'package:proy1/pages/pagPagos.dart';
 import 'package:proy1/pages/pagMiVehiculo.dart'; 
 import 'package:proy1/pages/ordenTrabajo.dart';
+import 'package:proy1/pages/reserva.dart';
 import 'package:proy1/main.dart';
 import 'package:proy1/controller/AuthController.dart';
 import 'package:proy1/Service/AuthService.dart';
@@ -83,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
     MiVehiculoPage(),
     PagosPage(),
     OrdenesTrabajoPage(),
+    ReservationScreen(),
   ];
 
   String? _clienteNombre = 'Nombre Cliente'; // Variable para almacenar el nombre del cliente
@@ -130,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: NetworkImage(_imagenURL),
+                    //backgroundImage: NetworkImage(_imagenURL),
                   ),
                   SizedBox(width: 10),
                   Column(
@@ -191,6 +193,13 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text("Orden de Trabajo"), // Agrega la nueva opción
               onTap: () {
                 _cambiarPagina(5);
+              },
+            ),
+                        ListTile(
+              leading: Icon(Icons.construction),
+              title: Text("Reservasiones"), // Agrega la nueva opción
+              onTap: () {
+                _cambiarPagina(6);
               },
             ),
             ListTile(
