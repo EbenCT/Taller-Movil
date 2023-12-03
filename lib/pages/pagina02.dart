@@ -196,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
                         ListTile(
-              leading: Icon(Icons.construction),
+              leading: Icon(Icons.calendar_month),
               title: Text("Reservasiones"), // Agrega la nueva opción
               onTap: () {
                 _cambiarPagina(6);

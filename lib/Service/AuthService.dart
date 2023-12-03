@@ -187,5 +187,43 @@ print(response.data);
     };
   }
 }
+ Future<Map<String, dynamic>> getServices() async {
+    
+  try {
+    final response = await _dio.get(
+      'http://$apiBackend/servicios',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+      ),
+    );
+ //   print(response.data);
+    if (response.statusCode == 200) {
+      //  print(response.data);
+      return {
+        'status': true,
+        'data': response.data,
+      };
+    } else {
+      return {
+        'status': false,
+        'error': 'Error al obtener servicios',
+      };
+    }
+  } catch (e) {
+    print('Error: $e');
+    return {
+      'status': false,
+      'error': 'Error de red',
+    };
+  }
+}
+  int? getUserId() {
+    return _userId;
+  }
 
+  int? getClientId() {
+    return _clienteId;
+  }
 }
