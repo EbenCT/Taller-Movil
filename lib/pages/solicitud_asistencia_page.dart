@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:proy1/controller/solicitud_asistencia_controller.dart';
-import 'package:proy1/model/solicitud_asistencia.dart';
 import 'package:proy1/pages/solicitud_asistencia_create_page.dart';
+
+import '../utils/api_backend.dart';
 
 class SolicitudAsistenciaPage extends StatefulWidget {
   const SolicitudAsistenciaPage({super.key});
@@ -13,22 +15,34 @@ class SolicitudAsistenciaPage extends StatefulWidget {
 
 class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
   final SolicitudAsistenciaController _con = SolicitudAsistenciaController();
+  final String _url = 'http://$apiHost';
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _con.init(context, refresh);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<SolicitudAsistencia>? assistanceRequest;
+    List<dynamic>? solicitudes;
 
-    final Future<List<SolicitudAsistencia>?> requests =
-        Future<List<SolicitudAsistencia>?>.delayed(
+    final Future<List<dynamic>?> requests = Future<List<dynamic>?>.delayed(
       const Duration(seconds: 2),
       () {
-        assistanceRequest = _con.assistanceRequest;
-        return assistanceRequest;
+        solicitudes = _con.solicitudes;
+        return solicitudes;
       },
     );
 
     return Scaffold(
       appBar: AppBar(
+        // leading: IconButton(
+        //   onPressed: _con.goToHomePage,
+        //   icon: const Icon(Icons.arrow_back_ios),
+        // ),
         actions: [
           Padding(
             padding:
@@ -61,46 +75,53 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
         ],
         title: const Text('Mis Solicitudes'),
       ),
-      body: FutureBuilder<List<SolicitudAsistencia>?>(
-        future: requests,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text(
-                'Error al cargar las solicitudes',
-                style: TextStyle(fontSize: 16.0),
-              ),
-            );
-          } else if (snapshot.data == null || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'No hay solicitudes disponibles.',
-                style: TextStyle(fontSize: 16.0),
-              ),
-            );
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return _card(snapshot.data![index], index);
-              },
-            );
-          }
-        },
+      body: RefreshIndicator(
+        color: Colors.white,
+        backgroundColor: Colors.deepPurple,
+        strokeWidth: 4.0,
+        onRefresh: _con.actualizarSolicitudes,
+        child: FutureBuilder<List<dynamic>?>(
+          future: requests,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text(
+                  'Error al cargar las solicitudes',
+                  style: TextStyle(fontSize: 16.0),
+                ),
+              );
+            } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No hay solicitudes disponibles.',
+                  style: TextStyle(fontSize: 16.0),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return _card(snapshot.data![index], index);
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }
 
-  Widget _card(SolicitudAsistencia? request, index) {
+  Widget _card(dynamic request, index) {
     return GestureDetector(
       onTap: () {
         // _con.openBottomSheet(order);
       },
       child: Container(
-        height: 220,
+        height: 250,
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        // alignment: Alignment.center,
         child: Card(
           elevation: 3.0,
           shape: RoundedRectangleBorder(
@@ -112,9 +133,9 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
                 child: Container(
                   height: 30,
                   width: MediaQuery.of(context).size.width * 1,
-                  decoration: BoxDecoration(
-                    // color: MyColors.primaryColor,
-                    borderRadius: const BorderRadius.only(
+                  decoration: const BoxDecoration(
+                    color: Colors.deepPurple,
+                    borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15),
                     ),
@@ -135,7 +156,7 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
               Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(top: 10),
-                height: 200,
+                height: 250,
                 width: double.infinity,
                 child: Row(
                   children: [
@@ -151,8 +172,7 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
                         child: FadeInImage(
                           placeholder: const AssetImage(
                               'assets/img/placeholder-image.png'),
-                          image: AssetImage('assets/img/placeholder-image.png'),
-                          // image: NetworkImage('$_url${request?.imagen}'),
+                          image: NetworkImage('$_url${request['imagen']}'),
                           fadeInDuration: const Duration(milliseconds: 200),
                           fit: BoxFit.cover,
                         ),
@@ -161,7 +181,7 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
                     Container(
                       margin: const EdgeInsets.only(top: 10, left: 10),
                       width: 200,
-                      height: 200,
+                      height: 250,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -179,9 +199,31 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  '${request?.descripcionProblema}',
+                                  '${request['descripcion_problema']}',
                                   style: const TextStyle(fontSize: 13),
-                                  maxLines: 3,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 3, horizontal: 4),
+                            child: Wrap(
+                              children: [
+                                const Text(
+                                  'Dirección: ',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  '${request['direccion']}',
+                                  style: const TextStyle(fontSize: 13),
+                                  maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
@@ -195,13 +237,13 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'Latitud: ',
+                                  'Fecha: ',
                                   style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  '${request?.latitud}',
+                                  '${request['fecha_solicitud']}',
                                   style: const TextStyle(fontSize: 13),
                                 ),
                               ],
@@ -215,13 +257,13 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'Longitud: ',
+                                  'Estado: ',
                                   style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  '${request?.longitud}',
+                                  '${request['estado']}',
                                   style: const TextStyle(fontSize: 13),
                                 ),
                               ],
@@ -235,33 +277,15 @@ class _SolicitudAsistenciaPageState extends State<SolicitudAsistenciaPage> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'Cliente: ',
+                                  'Técnico: ',
                                   style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  '${request?.clienteId}',
-                                  style: const TextStyle(fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            width: double.infinity,
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 3, horizontal: 4),
-                            child: Row(
-                              children: [
-                                const Text(
-                                  'Vehiculo: ',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  '${request?.vehiculoId}',
+                                  request['tecnico'] != null
+                                      ? '${request['tecnico']['nombre']}'
+                                      : 'Sin asignar',
                                   style: const TextStyle(fontSize: 13),
                                 ),
                               ],

@@ -15,7 +15,6 @@ class _SolicitudAsistenciaCreatePageState
     extends State<SolicitudAsistenciaCreatePage> {
   final SolicitudAsistenciaCreateController _con =
       SolicitudAsistenciaCreateController();
-  // final String _url = 'http://${Environment.API_ASSINTANCE}';
 
   @override
   void initState() {
@@ -27,13 +26,11 @@ class _SolicitudAsistenciaCreatePageState
 
   @override
   Widget build(BuildContext context) {
-    // List<Vehicle>? vehicles = _con.vehicles;
 
     return Scaffold(
       appBar: AppBar(
         // leading: IconButton(
-        //   // onPressed: _con.goToAssistancePage,
-        //   onPressed: () {},
+        //   onPressed: _con.goToAssistanceRequestPage,
         //   icon: const Icon(Icons.arrow_back_ios),
         // ),
         title: const Text('Nueva Solicitud'),
@@ -48,8 +45,10 @@ class _SolicitudAsistenciaCreatePageState
                 _textFieldDescription(),
                 const SizedBox(height: 7),
                 _textFieldAddress(),
-                // const SizedBox(height: 7),
-                // _dropDownVehicles([]),
+                const SizedBox(height: 7),
+                _dropDownServices(_con.services),
+                const SizedBox(height: 7),
+                _dropDownVehicles(_con.vehicles),
                 const SizedBox(height: 16),
                 _addImage(),
                 const SizedBox(height: 16),
@@ -112,157 +111,262 @@ class _SolicitudAsistenciaCreatePageState
     );
   }
 
-  // Widget _dropDownVehicles(List<Vehicle>? vehicles) {
-  //   return Material(
-  //     elevation: 2.0,
-  //     color: Colors.deepPurple[50],
-  //     borderRadius: BorderRadius.circular(15),
-  //     child: Container(
-  //       padding: const EdgeInsets.all(10),
-  //       child: Column(
-  //         children: [
-  //           const Row(
-  //             children: [
-  //               Icon(
-  //                 Icons.search,
-  //                 color: Colors.deepPurple,
-  //               ),
-  //               SizedBox(width: 15),
-  //               Text(
-  //                 'Vehículos',
-  //                 style: TextStyle(
-  //                   color: Colors.deepPurple,
-  //                   fontSize: 16,
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //           Container(
-  //             padding: const EdgeInsets.symmetric(horizontal: 20),
-  //             child: DropdownButton<Vehicle>(
-  //               value: _con.selectedVehicle,
-  //               underline: Container(
-  //                 alignment: Alignment.centerRight,
-  //                 child: Icon(
-  //                   Icons.arrow_drop_down_circle,
-  //                   color: Colors.deepPurple,
-  //                 ),
-  //               ),
-  //               elevation: 3,
-  //               isExpanded: true,
-  //               hint: const Text(
-  //                 'Seleccionar vehículo',
-  //                 style: TextStyle(color: Colors.deepPurple, fontSize: 16),
-  //               ),
-  //               items: vehicles?.map((Vehicle? vehicle) {
-  //                 return DropdownMenuItem<Vehicle>(
-  //                   value: vehicle,
-  //                   // child: _card(vehicle),
-  //                   child: Text(''),
-  //                 );
-  //               }).toList(),
-  //               onChanged: (Vehicle? newValue) {
-  //                 setState(() {
-  //                   _con.selectedVehicle = newValue;
-  //                 });
-  //               },
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _dropDownServices(List<dynamic>? services) {
+    return Material(
+      elevation: 2.0,
+      color: Colors.deepPurple[50],
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            const Row(
+              children: [
+                Icon(
+                  Icons.search,
+                  color: Colors.deepPurple,
+                ),
+                SizedBox(width: 15),
+                Text(
+                  'Servicios',
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: DropdownButton<dynamic>(
+                value: _con.selectedService,
+                underline: Container(
+                  alignment: Alignment.centerRight,
+                  child: const Icon(
+                    Icons.arrow_drop_down_circle,
+                    color: Colors.deepPurple,
+                  ),
+                ),
+                elevation: 3,
+                isExpanded: true,
+                hint: const Text(
+                  'Seleccionar servicio',
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontSize: 16,
+                  ),
+                ),
+                items: services?.map((dynamic service) {
+                  return DropdownMenuItem<dynamic>(
+                    value: service['id'],
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.only(bottom: 5),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.deepPurple[50],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          service['nombre'],
+                          style: const TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    _con.selectedService = newValue;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-  // Widget _card(Vehicle? vehicle) {
-  //   return Container(
-  //     margin: const EdgeInsets.only(right: 5),
-  //     child: SingleChildScrollView(
-  //       scrollDirection: Axis.horizontal,
-  //       child: Row(
-  //         children: [
-  //           Container(
-  //             height: 40,
-  //             width: 40,
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(8),
-  //             ),
-  //             child: ClipRRect(
-  //               borderRadius: BorderRadius.circular(8),
-  //               child: FadeInImage(
-  //                 placeholder:
-  //                     const AssetImage('assets/img/placeholder-image.png'),
-  //                 image: NetworkImage('$_url${vehicle?.photo}'),
-  //                 fadeInDuration: const Duration(milliseconds: 200),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           ),
-  //           const SizedBox(width: 10),
-  //           const Text(
-  //             'Marca: ',
-  //             style: TextStyle(
-  //               fontSize: 15,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //           Text(
-  //             '${vehicle?.brand}',
-  //             style: const TextStyle(fontSize: 15),
-  //           ),
-  //           const SizedBox(width: 10),
-  //           const Text(
-  //             'Modelo: ',
-  //             style: TextStyle(
-  //               fontSize: 15,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //           Text(
-  //             '${vehicle?.model}',
-  //             style: const TextStyle(fontSize: 15),
-  //           ),
-  //           const SizedBox(width: 10),
-  //           const Text(
-  //             'Placa: ',
-  //             style: TextStyle(
-  //               fontSize: 15,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //           Text(
-  //             '${vehicle?.licensePlate}',
-  //             style: const TextStyle(fontSize: 15),
-  //           ),
-  //           const SizedBox(width: 10),
-  //           const Text(
-  //             'Color: ',
-  //             style: TextStyle(
-  //               fontSize: 15,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //           Text(
-  //             '${vehicle?.color}',
-  //             style: const TextStyle(fontSize: 15),
-  //           ),
-  //           const SizedBox(width: 10),
-  //           const Text(
-  //             'Año: ',
-  //             style: TextStyle(
-  //               fontSize: 15,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //           Text(
-  //             '${vehicle?.year}',
-  //             style: const TextStyle(fontSize: 15),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget _dropDownVehicles(List<dynamic>? vehicles) {
+    return Material(
+      elevation: 2.0,
+      color: Colors.deepPurple[50],
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            const Row(
+              children: [
+                Icon(
+                  Icons.search,
+                  color: Colors.deepPurple,
+                ),
+                SizedBox(width: 15),
+                Text(
+                  'Vehículos',
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: DropdownButton<dynamic>(
+                value: _con.selectedVehicle,
+                underline: Container(
+                  alignment: Alignment.centerRight,
+                  child: const Icon(
+                    Icons.arrow_drop_down_circle,
+                    color: Colors.deepPurple,
+                  ),
+                ),
+                elevation: 3,
+                isExpanded: true,
+                hint: const Text(
+                  'Seleccionar vehículo',
+                  style: TextStyle(color: Colors.deepPurple, fontSize: 16),
+                ),
+                items: vehicles?.map((dynamic vehicle) {
+                  return DropdownMenuItem<dynamic>(
+                    value: vehicle['id'],
+                    child: _card(vehicle),
+                    // child: Text(''),
+                  );
+                }).toList(),
+                onChanged: (dynamic newValue) {
+                  setState(() {
+                    _con.selectedVehicle = newValue;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _card(dynamic vehicle) {
+    return Container(
+      margin: const EdgeInsets.only(right: 5),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            // Container(
+            //   height: 40,
+            //   width: 40,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(8),
+            //   ),
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(8),
+            //     child: FadeInImage(
+            //       placeholder:
+            //           const AssetImage('assets/img/placeholder-image.png'),
+            //       image: NetworkImage('$_url${vehicle?.photo}'),
+            //       fadeInDuration: const Duration(milliseconds: 200),
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(width: 10),
+            const Text(
+              'Marca: ',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '${vehicle['marca_nombre']}',
+              style: const TextStyle(fontSize: 15),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Modelo: ',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '${vehicle['modelo_nombre']}',
+              style: const TextStyle(fontSize: 15),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Tipo vehículo: ',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '${vehicle['tipoVehiculo_nombre']}',
+              style: const TextStyle(fontSize: 15),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Placa: ',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '${vehicle['placa']}',
+              style: const TextStyle(fontSize: 15),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Nro chasis: ',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '${vehicle['nro_chasis']}',
+              style: const TextStyle(fontSize: 15),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Color: ',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '${vehicle['color']}',
+              style: const TextStyle(fontSize: 15),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Año: ',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '${vehicle['año']}',
+              style: const TextStyle(fontSize: 15),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buttonSend() {
     return SizedBox(

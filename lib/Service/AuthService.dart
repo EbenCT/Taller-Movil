@@ -7,15 +7,14 @@ class AuthService {
   String? _token;
   static int? _userId;
   static int? _clienteId;
- // static int? _vehiculoId;
- 
- int? getClienteId() => _clienteId;
+  // static int? _vehiculoId;
+
+  int? getClienteId() => _clienteId;
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await _dio.post(
         'http://$apiBackend/login',
-        
         data: {
           'email': email,
           'password': password,
@@ -57,7 +56,7 @@ class AuthService {
     await prefs.remove('token');
   }
 
-Future<Map<String, dynamic>> getClientById() async {
+  Future<Map<String, dynamic>> getClientById() async {
     try {
       final response = await _dio.get(
         'http://$apiBackend/clientes/$_userId/datos',
@@ -72,7 +71,7 @@ Future<Map<String, dynamic>> getClientById() async {
         _clienteId = response.data['data']['id'];
         print(response);
         print('clienteId: $_clienteId');
-        return {         
+        return {
           'status': true,
           'data': response.data,
         };
@@ -93,134 +92,172 @@ Future<Map<String, dynamic>> getClientById() async {
 
   Future<Map<String, dynamic>> getVehicleByClientId() async {
     print('clienteId: $_clienteId');
-  try {
-    final response = await _dio.get(
-      'http://$apiBackend/vehiculos/$_clienteId/autos',
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $_token',
-        },
-      ),
-    );
-print(response.data);
-    if (response.statusCode == 200) {
-      //_vehiculoId = response.data[0]['id'];
+    try {
+      final response = await _dio.get(
+        'http://$apiBackend/vehiculos/$_clienteId/autos',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $_token',
+          },
+        ),
+      );
+      print(response.data);
+      if (response.statusCode == 200) {
+        //_vehiculoId = response.data[0]['id'];
         print(response.data);
-      //  print(_vehiculoId);
-      return {
-        'status': true,
-        'data': response.data,
-      };
-    } else {
+        //  print(_vehiculoId);
+        return {
+          'status': true,
+          'data': response.data,
+        };
+      } else {
+        return {
+          'status': false,
+          'error': 'Error al obtener información del vehiculo',
+        };
+      }
+    } catch (e) {
+      print('Error: $e');
       return {
         'status': false,
-        'error': 'Error al obtener información del vehiculo',
+        'error': 'Error de red',
       };
     }
-  } catch (e) {
-    print('Error: $e');
-    return {
-      'status': false,
-      'error': 'Error de red',
-    };
   }
-}
+
   Future<Map<String, dynamic>> getPagosByClientId() async {
     print('clienteId: $_clienteId');
-  try {
-    final response = await _dio.get(
-      'http://$apiBackend/pagos-cliente/$_clienteId',
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $_token',
-        },
-      ),
-    );
-    print(response.data);
-    if (response.statusCode == 200) {
+    try {
+      final response = await _dio.get(
+        'http://$apiBackend/pagos-cliente/$_clienteId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $_token',
+          },
+        ),
+      );
+      print(response.data);
+      if (response.statusCode == 200) {
         print(response.data);
-      return {
-        'status': true,
-        'data': response.data,
-      };
-    } else {
+        return {
+          'status': true,
+          'data': response.data,
+        };
+      } else {
+        return {
+          'status': false,
+          'error': 'Error al obtener pagos',
+        };
+      }
+    } catch (e) {
+      print('Error: $e');
       return {
         'status': false,
-        'error': 'Error al obtener pagos',
+        'error': 'Error de red',
       };
     }
-  } catch (e) {
-    print('Error: $e');
-    return {
-      'status': false,
-      'error': 'Error de red',
-    };
   }
-}
+
   Future<Map<String, dynamic>> getOrdenesByClientId() async {
     print('clienteId: $_clienteId');
-  try {
-    final response = await _dio.get(
-      'http://$apiBackend/ordenes-cliente/$_clienteId',
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $_token',
-        },
-      ),
-    );
-    print(response.data);
-    if (response.statusCode == 200) {
+    try {
+      final response = await _dio.get(
+        'http://$apiBackend/ordenes-cliente/$_clienteId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $_token',
+          },
+        ),
+      );
+      print(response.data);
+      if (response.statusCode == 200) {
         print(response.data);
-      return {
-        'status': true,
-        'data': response.data,
-      };
-    } else {
-      return {
-        'status': false,
-        'error': 'Error al obtener ordenes',
-      };
-    }
-  } catch (e) {
-    print('Error: $e');
-    return {
-      'status': false,
-      'error': 'Error de red',
-    };
-  }
-}
- Future<Map<String, dynamic>> getServices() async {
-    
-  try {
-    final response = await _dio.get(
-      'http://$apiBackend/servicios',
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $_token',
-        },
-      ),
-    );
- //   print(response.data);
-    if (response.statusCode == 200) {
-      //  print(response.data);
-      return {
-        'status': true,
-        'data': response.data,
-      };
-    } else {
+        return {
+          'status': true,
+          'data': response.data,
+        };
+      } else {
+        return {
+          'status': false,
+          'error': 'Error al obtener ordenes',
+        };
+      }
+    } catch (e) {
+      print('Error: $e');
       return {
         'status': false,
-        'error': 'Error al obtener servicios',
+        'error': 'Error de red',
       };
     }
-  } catch (e) {
-    print('Error: $e');
-    return {
-      'status': false,
-      'error': 'Error de red',
-    };
   }
-}
+
+  Future<Map<String, dynamic>> getServices() async {
+    try {
+      final response = await _dio.get(
+        'http://$apiBackend/servicios',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $_token',
+          },
+        ),
+      );
+      //   print(response.data);
+      if (response.statusCode == 200) {
+        //  print(response.data);
+        return {
+          'status': true,
+          'data': response.data,
+        };
+      } else {
+        return {
+          'status': false,
+          'error': 'Error al obtener servicios',
+        };
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'status': false,
+        'error': 'Error de red',
+      };
+    }
+  }
+  
+  Future<Map<String, dynamic>> getAssistanceRequestByClientId() async {
+    print('clienteId: $_clienteId');
+    try {
+      final response = await _dio.get(
+        'http://$apiBackend/solicitudes/$_clienteId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $_token',
+          },
+        ),
+      );
+      print(response.data);
+      if (response.statusCode == 200) {
+        //_vehiculoId = response.data[0]['id'];
+        print(response.data);
+        //  print(_vehiculoId);
+        return {
+          'status': true,
+          'data': response.data,
+        };
+      } else {
+        return {
+          'status': false,
+          'error': 'Error al obtener información de la solicitud',
+        };
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'status': false,
+        'error': 'Error de red',
+      };
+    }
+  }
+
   int? getUserId() {
     return _userId;
   }

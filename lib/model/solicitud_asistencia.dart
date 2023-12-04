@@ -9,25 +9,29 @@ String assistanceRequestToJson(SolicitudAsistencia data) =>
 class SolicitudAsistencia {
   late String? id;
   late String descripcionProblema;
-  late String estado;
+  late String? estado;
   late String latitud;
   late String longitud;
-  late String? notaVoz;
+  late String direccion;
+  late String? audio;
   late String? imagen;
   late String clienteId;
-  late String vehiculoId;
+  late String? vehiculoId;
+  late String? servicioId;
   late List<SolicitudAsistencia> toList = [];
 
   SolicitudAsistencia({
     this.id,
     required this.descripcionProblema,
-    required this.estado,
+    this.estado,
     required this.latitud,
     required this.longitud,
-    this.notaVoz,
+    required this.direccion,
+    this.audio,
     this.imagen,
     required this.clienteId,
-    required this.vehiculoId,
+    this.vehiculoId,
+    this.servicioId,
   });
 
   factory SolicitudAsistencia.fromJson(Map<String, dynamic> json) =>
@@ -37,10 +41,12 @@ class SolicitudAsistencia {
         estado: json["estado"],
         latitud: json["latitud"],
         longitud: json["longitud"],
-        notaVoz: json["nota_voz"],
+        direccion: json["direccion"],
+        audio: json["audio"],
         imagen: json["imagen"],
         clienteId: json["cliente_id"] is int ? json["cliente_id"].toString() : json["cliente_id"],
-        vehiculoId: json["vehiculo_id"] is int ? json["vehiculo_id"].toString() : json["vehiculo_id"]
+        vehiculoId: json["vehiculo_id"] is int ? json["vehiculo_id"].toString() : json["vehiculo_id"],
+        servicioId: json["servicio_id"] is int ? json["servicio_id"].toString() : json["servicio_id"]
       );
       
   SolicitudAsistencia.fromJsonList(List<dynamic>? jsonList) {
@@ -57,9 +63,11 @@ class SolicitudAsistencia {
         "estado": estado,
         "latitud": latitud,
         "longitud": longitud,
-        "nota_voz": notaVoz,
+        "direccion": direccion,
+        "audio": audio,
         "imagen": imagen,
         "cliente_id": clienteId,
         "vehiculo_id": vehiculoId,
+        "servicio_id": servicioId,
       };
 }

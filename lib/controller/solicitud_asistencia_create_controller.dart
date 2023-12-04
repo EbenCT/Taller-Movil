@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:proy1/controller/response_api.dart';
+import 'package:proy1/pages/solicitud_asistencia_page.dart';
 
+import '../Service/AuthService.dart';
 import '../Service/solicitud_asistencia_service.dart';
 import '../model/solicitud_asistencia.dart';
-import '../model/vehicle.dart';
 import '../pages/solicitud_asistencia_map_page.dart';
 import '../utils/my_snackbar.dart';
 
@@ -20,10 +23,15 @@ class SolicitudAsistenciaCreateController {
   final SolicitudAsistenciaProvider assistanceRequestProvider =
       SolicitudAsistenciaProvider();
 
-  // final VehicleProvider _vehicleProvider = VehicleProvider();
+  AuthService authService = AuthService();
 
-  List<Vehicle>? vehicles = [];
-  Vehicle? selectedVehicle;
+  int? userId;
+  int? clientId;
+
+  List<dynamic>? vehicles = [];
+  List<dynamic>? services = [];
+  int? selectedVehicle;
+  int? selectedService;
 
   TextEditingController descriptionController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -34,6 +42,19 @@ class SolicitudAsistenciaCreateController {
     this.refresh = refresh;
 
     assistanceRequestProvider.init(context);
+
+    userId = authService.getUserId();
+    clientId = authService.getClientId();
+
+    await _getServices();
+    await _getVehicles();
+
+    // ignore: avoid_print
+    print('UserID: $userId, ClientID: $clientId');
+    // ignore: avoid_print
+    print('SERVICIOS: $services');
+    // ignore: avoid_print
+    print('VEHICULOS: $vehicles');
 
     // vehicles = await getVehicles(customer!.id!);
     refresh();
@@ -52,10 +73,13 @@ class SolicitudAsistenciaCreateController {
     String latitude = this.address!['latitude'].toString();
     String direccion = this.address!['address'].toString();
 
+    print('ID CLIENTE: $clientId');
     print('LONGITUD: $longitude');
     print('LATITUD: $latitude');
     print('DIRECCION: $direccion');
     print('DESCRIPCION: $description');
+    print('SERVICIO: $selectedService');
+    print('VEHICULO: $selectedVehicle');
 
     if (imageFile == null) {
       MySnackbar.show(context, 'Debe seleccionar una imagen');
@@ -64,39 +88,50 @@ class SolicitudAsistenciaCreateController {
 
     SolicitudAsistencia assistanceRequest = SolicitudAsistencia(
       descripcionProblema: description,
-      estado: 'Pendiente',
       longitud: longitude,
       latitud: latitude,
-      clienteId: "1",
-      vehiculoId: selectedVehicle!.id!,
+      clienteId: clientId.toString(),
+      vehiculoId: (selectedVehicle != null) ? selectedVehicle.toString() : null,
+      servicioId: (selectedService != null) ? selectedService.toString() : null,
+      direccion: direccion,
       // photo: '',
     );
 
     Stream? stream = await assistanceRequestProvider.createWithImage(
         assistanceRequest, imageFile, audioFile);
-    stream!.listen((response) {
-      // ResponseApi responseApi = ResponseApi?.fromJson(json.decode(response));
+    stream?.listen((response) {
+      ResponseApi responseApi = ResponseApi?.fromJson(json.decode(response));
 
       // ignore: avoid_print
-      // print('REPUESTA: ${responseApi.toJson()}');
+      print('REPUESTA: ${responseApi.toJson()}');
 
-      // if (responseApi.success!) {
-      //   // MySnackbar.show(context, 'Solicitud registrado correctamente');
-      //   Future.delayed(const Duration(seconds: 1), () {
-      //     Navigator.pushReplacementNamed(context!, 'customer/home/request');
-      //   });
-      // } else {
-      //   // isEnable = true;
-      //   refresh();
-      // }
+      if (responseApi.success!) {
+        MySnackbar.show(context, 'Solicitud registrado correctamente');
+        Future.delayed(const Duration(seconds: 1), () {
+          // Navigator.pushReplacementNamed(context!, 'customer/home/request');
+          Navigator.push(context!, MaterialPageRoute(builder: (context) => const SolicitudAsistenciaPage()));
+        });
+      } else {
+        // isEnable = true;
+        refresh();
+      }
     });
   }
 
-  Future<List<Vehicle>?> getVehicles(String id) async {
-    final List<Vehicle>? results =
-        // await _vehicleProvider.getVehiclesByCustomerId(id);
-        refresh();
-    return results;
+  Future<void> _getServices() async {
+    Map<String, dynamic> servicesMap = await authService.getServices();
+    // ignore: avoid_print
+    print(servicesMap);
+
+    services = servicesMap['data'];
+  }
+
+  Future<void> _getVehicles() async {
+    Map<String, dynamic> vehiclesMap = await authService.getVehicleByClientId();
+    // ignore: avoid_print
+    print(vehiclesMap);
+
+    vehicles = vehiclesMap['data'];
   }
 
   void openMap() async {
@@ -163,7 +198,8 @@ class SolicitudAsistenciaCreateController {
     );
   }
 
-  goToAssistancePage() {
-    // Navigator.pushNamed(context!, 'customer/home/request');
+  void goToAssistanceRequestPage() {
+    Navigator.push(context!, MaterialPageRoute(builder: (context) => const SolicitudAsistenciaPage()));
   }
+
 }
