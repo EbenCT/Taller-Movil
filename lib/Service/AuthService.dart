@@ -8,6 +8,8 @@ class AuthService {
   static int? _userId;
   static int? _clienteId;
  // static int? _vehiculoId;
+ 
+ int? getClienteId() => _clienteId;
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {

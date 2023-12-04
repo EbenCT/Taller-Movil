@@ -10,6 +10,8 @@ import 'package:proy1/main.dart';
 import 'package:proy1/controller/AuthController.dart';
 import 'package:proy1/Service/AuthService.dart';
 
+import 'solicitud_asistencia_page.dart';
+
 void main() {
   runApp(const Pagina02());
 }
@@ -27,15 +29,15 @@ class Pagina02 extends StatelessWidget {
         bool exitConfirmed = await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('¿Estás seguro de que quieres salir?'),
+            title: const Text('¿Estás seguro de que quieres salir?'),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text('Cancelar'),
+                child: const Text('Cancelar'),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text('Salir'),
+                child: const Text('Salir'),
               ),
             ],
           ),
@@ -56,7 +58,7 @@ class Pagina02 extends StatelessWidget {
             _authController.logout();
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => MyApp()),
+              MaterialPageRoute(builder: (context) => const MyApp()),
               (route) => false,
             );
           },
@@ -77,7 +79,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _paginaActual = 0;
-  List<Widget> _paginas = [
+  final List<Widget> _paginas = [
     PaginaHome(),
     PaginaUsers(),
     Servicios(),
@@ -85,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     PagosPage(),
     OrdenesTrabajoPage(),
     ReservationScreen(),
+    const SolicitudAsistenciaPage(),
   ];
 
   String? _clienteNombre = 'Nombre Cliente'; // Variable para almacenar el nombre del cliente
@@ -117,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text(
+        title: const Text(
           "TALLER MECÁNICO",
           style: TextStyle(color: Colors.white, fontSize: 30),
         ),
@@ -127,26 +130,26 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           children:<Widget>[
               DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: const BoxDecoration(color: Colors.blue),
               child: Row(
                 children: [
                   CircleAvatar(
                     radius: 40,
                    // backgroundImage: NetworkImage(_imagenURL),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Bienvenido!!!',
                         style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         _clienteNombre ?? 'Nombre Cliente',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: const TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ],
                   ),
@@ -154,57 +157,64 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Inicio"),
+              leading: const Icon(Icons.home),
+              title: const Text("Inicio"),
               onTap: () {
                 _cambiarPagina(0);
               },
             ),
             ListTile(
-              leading: Icon(Icons.supervised_user_circle),
-              title: Text("Perfil"),
+              leading: const Icon(Icons.supervised_user_circle),
+              title: const Text("Perfil"),
               onTap: () {
                 _cambiarPagina(1);
               },
             ),
             ListTile(
-              leading: Icon(Icons.build_rounded),
-              title: Text("Servicios"),
+              leading: const Icon(Icons.build_rounded),
+              title: const Text("Servicios"),
               onTap: () {
                 _cambiarPagina(2);
               },
             ),
             ListTile(
-              leading: Icon(Icons.directions_car),
-              title: Text("Mi Vehículo"), // Agrega la nueva opción
+              leading: const  Icon(Icons.directions_car),
+              title: const  Text("Mi Vehículo"), // Agrega la nueva opción
               onTap: () {
                 _cambiarPagina(3);
               },
             ),
             ListTile(
-              leading: Icon(Icons.credit_card),
-              title: Text("Mis Pagos"), // Agrega la nueva opción
+              leading: const Icon(Icons.credit_card),
+              title: const Text("Mis Pagos"), // Agrega la nueva opción
               onTap: () {
                 _cambiarPagina(4);
               },
             ),
             ListTile(
-              leading: Icon(Icons.construction),
-              title: Text("Orden de Trabajo"), // Agrega la nueva opción
+              leading: const Icon(Icons.construction),
+              title: const Text("Orden de Trabajo"), // Agrega la nueva opción
               onTap: () {
                 _cambiarPagina(5);
               },
             ),
-                        ListTile(
-              leading: Icon(Icons.calendar_month),
-              title: Text("Reservasiones"), // Agrega la nueva opción
+            ListTile(
+              leading: const Icon(Icons.calendar_month),
+              title: const Text("Reservasiones"), // Agrega la nueva opción
               onTap: () {
                 _cambiarPagina(6);
               },
             ),
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text("Cerrar Sesión"),
+              leading: const Icon(Icons.assignment),
+              title: const Text("Mis Solicitudes"), // Agrega la nueva opción
+              onTap: () {
+                _cambiarPagina(7);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text("Cerrar Sesión"),
               onTap: widget.onLogout,
             ),
           ],
