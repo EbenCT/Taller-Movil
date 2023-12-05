@@ -267,16 +267,80 @@ class _ReservationScreenState extends State<ReservationScreen> {
       if (response.statusCode == 201) {
         // La reserva se creó exitosamente
         print('Reserva creada correctamente');
-        // Puedes manejar la respuesta aquí según tus necesidades
-      } else {
-        // Error al crear la reserva
-        print('Error al crear la reserva - Código: ${response.statusCode}');
-        // Puedes manejar el error aquí según tus necesidades
-      }
-    } catch (e) {
-      // Error de conexión u otro error
-      print('Error: $e');
-      // Puedes manejar el error aquí según tus necesidades
+       // Mostrar el mensaje de reserva registrada con los detalles
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Reserva registrada'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Fecha: $formattedDate'),
+                Text('Hora inicio: $formattedTime1'),
+                Text('Hora fin: $formattedTime2'),
+                Text('Estado: falta aprobación'),
+                Text('Servicio: ${_services.firstWhere((service) => service['id'] == _selectedService)['nombre']}'),
+                // Agrega más detalles si es necesario
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Aceptar'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Error al crear la reserva
+      print('Error al crear la reserva - Código: ${response.statusCode}');
+
+      // Mostrar el mensaje de horario ocupado
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Horario ocupado por otro cliente, escoja otra fecha u hora'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Aceptar'),
+              ),
+            ],
+          );
+        },
+      );
     }
+  } catch (e) {
+    // Error de conexión u otro error
+    print('Error: $e');
+
+    // Mostrar un mensaje genérico de error
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Ocurrió un error al procesar la reserva. Inténtalo de nuevo.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
   }
 }
