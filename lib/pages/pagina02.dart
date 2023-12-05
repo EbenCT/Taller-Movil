@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   String? _clienteNombre = 'Nombre Cliente'; // Variable para almacenar el nombre del cliente
-  String _imagenURL = 'http://3.148.113.33/assets/images/logo-login.png';
+  String _imagenURL = 'http://3.149.240.119/assets/images/logo-login.png';
 
   void _cambiarPagina(int index) {
     setState(() {
@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                   // backgroundImage: NetworkImage(_imagenURL),
+                    backgroundImage: NetworkImage(_imagenURL),
                   ),
                   const SizedBox(width: 10),
                   Column(
