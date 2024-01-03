@@ -227,7 +227,7 @@ class AuthService {
     print('clienteId: $_clienteId');
     try {
       final response = await _dio.get(
-        'http://$apiBackend/solicitudes/$_clienteId',
+        'http://$apiBackend/solicitudes/cliente/$_clienteId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $_token',
